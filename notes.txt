@@ -58,14 +58,14 @@ Tech Stack
 ----------
 
 Frontend:
-- React (or Next.js if you want SSR/SSG)
+- React/Next.js
 - Tailwind CSS
 - React Router / Zustand / Context API
 - Axios or React Query
 
 Backend:
 - Node.js + Express
-- MongoDB + Mongoose
+- Postgres
 - JWT for auth
 - Cloudinary (or similar) for image uploads
 
