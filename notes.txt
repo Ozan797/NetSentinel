@@ -1,5 +1,143 @@
-ELearning Platform
 
-Teach about _
-Have profiles + badge awards
-Use a payment gateway for monthly subscriptions
+Sports Gear Marketplace Project Plan - FitSwap
+==============================================
+
+Overview
+--------
+FitSwap is a fullstack web application that enables users to buy, sell, and trade second-hand sports and fitness equipment. The app provides a clean interface for creating listings, browsing gear by category, chatting with sellers, and managing favourites—all while showcasing strong backend, frontend, and database integration.
+
+Features & Scope
+----------------
+
+Authentication & Authorisation
+- User sign-up/login/logout
+- JWT-based session management
+- Protected routes for creating/editing listings
+
+Product Listings
+- Create, edit, delete gear listings
+- Upload multiple images (Cloudinary or similar)
+- Listing fields:
+  - Title
+  - Description
+  - Price
+  - Category (e.g., football, gym, yoga)
+  - Condition (new/lightly used/etc.)
+  - Location (postcode or city)
+  - Images
+
+Search & Filtering
+- Full-text search bar
+- Filters:
+  - Category
+  - Price range
+  - Condition
+  - Location
+- Sort by: Newest, Price (asc/desc)
+
+Messaging System
+- In-app chat between buyers & sellers
+- Conversations grouped by product
+- Message timestamps
+- Notification indicator for new messages
+
+User Dashboard
+- View/edit profile
+- "My Listings"
+- "Favourites"
+- Message inbox
+
+Extras (Stretch Goals)
+- Stripe payment integration
+- Listing ‘report’ system
+- Admin dashboard
+- Review/rating system for sellers
+- Mobile-first PWA support
+
+Tech Stack
+----------
+
+Frontend:
+- React (or Next.js if you want SSR/SSG)
+- Tailwind CSS
+- React Router / Zustand / Context API
+- Axios or React Query
+
+Backend:
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT for auth
+- Cloudinary (or similar) for image uploads
+
+Optional:
+- Stripe API
+- Socket.io (for real-time chat)
+- Map API (Google/Leaflet) for location filtering
+
+Suggested Folder Structure
+--------------------------
+/client
+  /src
+    /components
+    /pages
+    /services
+    /hooks
+    /assets
+
+/server
+  /controllers
+  /models
+  /routes
+  /middleware
+  /utils
+
+5-Step Prototyping Plan
+-----------------------
+
+Step 1: MVP Authentication & Basic Listings
+- User register/login/logout (JWT + frontend storage)
+- Create/edit/delete listings
+- Basic product card UI
+
+Step 2: Listing Feed + Filtering
+- Home page with all listings
+- Filters: category, price, condition
+- Search bar
+
+Step 3: Messaging System
+- Create message model + routes
+- Frontend inbox with live messaging per listing
+- Message preview in dashboard
+
+Step 4: Favourites & User Dashboard
+- Allow users to favourite listings
+- Dashboard: My Listings, Favourites, Messages
+- Edit profile page
+
+Step 5: Image Uploads & Polish
+- Cloudinary integration for image hosting
+- Multiple image support per listing
+- Final UI clean-up
+- Mobile responsiveness
+
+Bonus Enhancements (Post-Prototyping)
+- Stripe payments
+- Admin dashboard
+- Report listings
+- Map integration
+- Reviews + ratings
+
+Setup Instructions
+------------------
+
+# Backend
+cd server
+npm install
+npm run dev
+
+# Frontend
+cd client
+npm install
+npm start
+
+Add .env files in both client & server with API keys and secrets (JWT, DB URI, Cloudinary, etc.)
