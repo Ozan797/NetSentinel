@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    container_name: secrets-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: secrets
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    restart: always
+    container_name: secrets-backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/secrets
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend
+    restart: always
+    container_name: secrets-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
