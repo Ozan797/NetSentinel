@@ -19,19 +19,15 @@ export default function Dashboard() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [scannedAt, setScannedAt] = useState<string | null>(null);
 
-  // Load latest scan on mount
   useEffect(() => {
     axios.get('http://localhost:3000/scan/history')
       .then(res => {
         const latest = res.data[0];
-        if (latest) {
-          setScanId(latest.id);
-        }
+        if (latest) setScanId(latest.id);
       })
       .catch(console.error);
   }, []);
 
-  // Load devices when scanId changes
   useEffect(() => {
     if (scanId !== null) {
       axios.get(`http://localhost:3000/scan/${scanId}`)

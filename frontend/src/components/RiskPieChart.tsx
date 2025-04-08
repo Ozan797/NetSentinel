@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { motion } from 'framer-motion';
 
 const COLORS = ['#4ade80', '#facc15', '#f87171']; // green, amber, red
 
@@ -10,7 +11,12 @@ export default function RiskPieChart({ data }: { data: { lowRisk: number, medium
   ];
 
   return (
-    <div style={{ width: '100%', height: 300, marginTop: '40px' }}>
+    <motion.div
+      style={{ width: '100%', height: 300, marginTop: '40px' }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <h3 style={{ marginBottom: 12, fontSize: '18px', fontWeight: 600 }}>Risk Distribution</h3>
       <ResponsiveContainer>
         <PieChart>
@@ -20,7 +26,6 @@ export default function RiskPieChart({ data }: { data: { lowRisk: number, medium
             cy="50%"
             innerRadius={70}
             outerRadius={100}
-            fill="#8884d8"
             paddingAngle={5}
             dataKey="value"
             label
@@ -33,6 +38,6 @@ export default function RiskPieChart({ data }: { data: { lowRisk: number, medium
           <Legend />
         </PieChart>
       </ResponsiveContainer>
-    </div>
+    </motion.div>
   );
 }
