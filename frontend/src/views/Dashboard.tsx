@@ -1,37 +1,75 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Card from "../components/Card";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Card from '../components/Card';
+import RiskPieChart from '../components/RiskPieChart';
+import ScanSelector from '../components/ScanSelector';
+import DeviceTable from '../components/DeviceTable';
 
-interface ScanSummary {
-  totalDevices: number;
-  highRisk: number;
-  mediumRisk: number;
-  lowRisk: number;
-  latestScanId: number;
-  scannedAt: string;
-}
+type Device = {
+  ip: string;
+  mac: string;
+  openPorts: number[];
+  riskScore: number;
+  riskLevel: string;
+  deviceType: string;
+};
 
 export default function Dashboard() {
-  const [summary, setSummary] = useState<ScanSummary | null>(null);
+  const [scanId, setScanId] = useState<number | null>(null);
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [scannedAt, setScannedAt] = useState<string | null>(null);
 
+  // Load latest scan on mount
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/scan/summary")
-      .then((res) => setSummary(res.data))
+    axios.get('http://localhost:3000/scan/history')
+      .then(res => {
+        const latest = res.data[0];
+        if (latest) {
+          setScanId(latest.id);
+        }
+      })
       .catch(console.error);
   }, []);
 
-  if (!summary) return <p style={{ padding: "1rem" }}>Loading summary...</p>;
+  // Load devices when scanId changes
+  useEffect(() => {
+    if (scanId !== null) {
+      axios.get(`http://localhost:3000/scan/${scanId}`)
+        .then(res => {
+          setDevices(res.data.devices);
+          setScannedAt(res.data.createdAt);
+        })
+        .catch(console.error);
+    }
+  }, [scanId]);
+
+  const summary = {
+    totalDevices: devices.length,
+    highRisk: devices.filter(d => d.riskLevel === 'High').length,
+    mediumRisk: devices.filter(d => d.riskLevel === 'Medium').length,
+    lowRisk: devices.filter(d => d.riskLevel === 'Low').length,
+  };
 
   return (
-    <section className="dashboard">
+    <div>
+      <ScanSelector onSelect={setScanId} />
+
       <div className="card-grid">
         <Card title="Total Devices" value={summary.totalDevices} />
         <Card title="High Risk" value={summary.highRisk} variant="high" />
         <Card title="Medium Risk" value={summary.mediumRisk} variant="medium" />
         <Card title="Low Risk" value={summary.lowRisk} variant="low" />
-        <Card title="Scan ID" value={summary.latestScanId} />
+        <Card title="Scan ID" value={scanId ?? '-'} />
       </div>
-    </section>
+
+      <RiskPieChart data={summary} />
+      <DeviceTable devices={devices} />
+
+      {scannedAt && (
+        <p style={{ fontSize: 12, color: '#666', marginTop: 16 }}>
+          Scanned at: {new Date(scannedAt).toLocaleString()}
+        </p>
+      )}
+    </div>
   );
 }
