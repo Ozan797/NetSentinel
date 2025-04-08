@@ -48,3 +48,47 @@ export const getScanById = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+/**
+ * GET /scan/summary
+ * Returns aggregated stats for the most recent scan
+ */
+export const getScanSummary = async (req: Request, res: Response) => {
+  try {
+    const latestScan = await prisma.scan.findFirst({
+      orderBy: { createdAt: 'desc' },
+      include: { devices: true },
+    });
+
+    if (!latestScan) {
+      return res.json({
+        totalDevices: 0,
+        highRisk: 0,
+        mediumRisk: 0,
+        lowRisk: 0,
+        latestScanId: null,
+        scannedAt: null,
+      });
+    }
+
+    const riskCounts = latestScan.devices.reduce(
+      (acc, device) => {
+        if (device.riskLevel === 'High') acc.highRisk++;
+        else if (device.riskLevel === 'Medium') acc.mediumRisk++;
+        else acc.lowRisk++;
+        return acc;
+      },
+      { highRisk: 0, mediumRisk: 0, lowRisk: 0 }
+    );
+
+    res.json({
+      totalDevices: latestScan.devices.length,
+      latestScanId: latestScan.id,
+      scannedAt: latestScan.createdAt,
+      ...riskCounts,
+    });
+  } catch (error) {
+    console.error('❌ Failed to generate scan summary:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
