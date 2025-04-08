@@ -1,0 +1,48 @@
+.card {
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: 0.2s ease-in-out;
+    color: #111827;
+  }
+  
+  /* Default (neutral) */
+  .card-default {
+    background: #ffffff;
+  }
+  
+  /* High Risk: red gradient */
+  .card-high {
+    background: linear-gradient(135deg, #fee2e2, #f87171);
+    color: #7f1d1d;
+  }
+  
+  /* Medium Risk: orange/amber */
+  .card-medium {
+    background: linear-gradient(135deg, #fef3c7, #facc15);
+    color: #78350f;
+  }
+  
+  /* Low Risk: green gradient */
+  .card-low {
+    background: linear-gradient(135deg, #dcfce7, #4ade80);
+    color: #065f46;
+  }
+  
+  .card h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  
+  .card p {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
