@@ -1,28 +1,2 @@
-# Node modules
-node_modules/
-
-# TypeScript build output
-dist/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# dotenv environment variables file
+node_modules
 .env
-
-# Prisma migrations (if you prefer to not track migrations)
-prisma/migrations/
-
-# Generated Prisma files
-.prisma/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Editor directories and settings
-.vscode/
-.idea/
