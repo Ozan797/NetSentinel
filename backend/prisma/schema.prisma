@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Scan {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  devices   Device[]
+}
+
+model Device {
+  id         Int      @id @default(autoincrement())
+  ip         String
+  mac        String
+  openPorts  Int[]
+  riskScore  Int
+  riskLevel  String
+  deviceType String
+  scanId     Int
+  scan       Scan     @relation(fields: [scanId], references: [id])
+}
