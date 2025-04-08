@@ -4,6 +4,7 @@ import Card from '../components/Card';
 import RiskPieChart from '../components/RiskPieChart';
 import ScanSelector from '../components/ScanSelector';
 import DeviceTable from '../components/DeviceTable';
+import NewScanButton from '../components/NewScanButton';
 
 type Device = {
   ip: string;
@@ -19,14 +20,20 @@ export default function Dashboard() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [scannedAt, setScannedAt] = useState<string | null>(null);
 
+  const loadLatestScan = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/scan/history');
+      const latest = res.data[0];
+      if (latest) setScanId(latest.id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
   useEffect(() => {
-    axios.get('http://localhost:3000/scan/history')
-      .then(res => {
-        const latest = res.data[0];
-        if (latest) setScanId(latest.id);
-      })
-      .catch(console.error);
+    loadLatestScan();
   }, []);
+  
 
   useEffect(() => {
     if (scanId !== null) {
@@ -48,6 +55,7 @@ export default function Dashboard() {
 
   return (
     <div>
+      <NewScanButton onScanComplete={loadLatestScan} />
       <ScanSelector onSelect={setScanId} />
 
       <div className="card-grid">
