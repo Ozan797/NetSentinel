@@ -1,14 +1,12 @@
 import net from 'net';
 
 export const scanPorts = async (ip: string, ports: number[]): Promise<number[]> => {
-  const openPorts: number[] = [];
-
-  const scanSinglePort = (port: number): Promise<boolean> => {
+  const scanSinglePort = (port: number): Promise<number | null> => {
     return new Promise((resolve) => {
       const socket = new net.Socket();
       let isOpen = false;
 
-      socket.setTimeout(1000); // 1 second timeout
+      socket.setTimeout(700); // shorter timeout = faster scan
 
       socket.connect(port, ip, () => {
         isOpen = true;
@@ -17,14 +15,12 @@ export const scanPorts = async (ip: string, ports: number[]): Promise<number[]> 
 
       socket.on('timeout', () => socket.destroy());
       socket.on('error', () => socket.destroy());
-      socket.on('close', () => resolve(isOpen));
+      socket.on('close', () => resolve(isOpen ? port : null));
     });
   };
 
-  for (const port of ports) {
-    const isOpen = await scanSinglePort(port);
-    if (isOpen) openPorts.push(port);
-  }
-
-  return openPorts;
+  const results = await Promise.allSettled(ports.map(scanSinglePort));
+  return results
+    .filter(r => r.status === 'fulfilled' && r.value !== null)
+    .map(r => (r as PromiseFulfilledResult<number>).value);
 };
